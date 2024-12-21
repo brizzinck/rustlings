@@ -1,26 +1,17 @@
-// A basket of fruits in the form of a hash map needs to be defined. The key
-// represents the name of the fruit and the value represents how many of that
-// particular fruit is in the basket. You have to put at least 3 different
-// types of fruits (e.g. apple, banana, mango) in the basket and the total count
-// of all the fruits should be at least 5.
-
 use std::collections::HashMap;
 
 fn fruit_basket() -> HashMap<String, u32> {
-    // TODO: Declare the hash map.
-    // let mut basket =
-
-    // Two bananas are already given for you :)
+    let mut basket = HashMap::new();
+    basket.insert(String::from("apple"), 1);
+    basket.insert(String::from("mango"), 4);
     basket.insert(String::from("banana"), 2);
-
-    // TODO: Put more fruits in your basket.
+    basket.insert(String::from("pear"), 3);
+    basket.insert(String::from("pineapple"), 3);
 
     basket
 }
 
-fn main() {
-    // You can optionally experiment here.
-}
+fn main() {}
 
 #[cfg(test)]
 mod tests {
