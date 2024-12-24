@@ -1,10 +1,3 @@
-// This is similar to the previous `from_into` exercise. But this time, we'll
-// implement `FromStr` and return errors instead of falling back to a default
-// value. Additionally, upon implementing `FromStr`, you can use the `parse`
-// method on strings to generate an object of the implementor type. You can read
-// more about it in the documentation:
-// https://doc.rust-lang.org/std/str/trait.FromStr.html
-
 use std::num::ParseIntError;
 use std::str::FromStr;
 
@@ -14,34 +7,31 @@ struct Person {
     age: u8,
 }
 
-// We will use this error type for the `FromStr` implementation.
 #[derive(Debug, PartialEq)]
 enum ParsePersonError {
-    // Incorrect number of fields
     BadLen,
-    // Empty name field
     NoName,
-    // Wrapped error from parse::<u8>()
     ParseInt(ParseIntError),
 }
 
-// TODO: Complete this `FromStr` implementation to be able to parse a `Person`
-// out of a string in the form of "Mark,20".
-// Note that you'll need to parse the age component into a `u8` with something
-// like `"4".parse::<u8>()`.
-//
-// Steps:
-// 1. Split the given string on the commas present in it.
-// 2. If the split operation returns less or more than 2 elements, return the
-//    error `ParsePersonError::BadLen`.
-// 3. Use the first element from the split operation as the name.
-// 4. If the name is empty, return the error `ParsePersonError::NoName`.
-// 5. Parse the second element from the split operation into a `u8` as the age.
-// 6. If parsing the age fails, return the error `ParsePersonError::ParseInt`.
 impl FromStr for Person {
     type Err = ParsePersonError;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {}
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let parts = s.split(',').collect::<Vec<&str>>();
+        if parts.len() != 2 {
+            return Err(ParsePersonError::BadLen);
+        }
+        if parts[0].is_empty() {
+            return Err(ParsePersonError::NoName);
+        }
+        let age = match parts[1].parse::<u8>() {
+            Ok(age) => age,
+            Err(e) => return Err(ParsePersonError::ParseInt(e)),
+        };
+        let name = parts[0].trim().to_string();
+        Ok(Self { name, age })
+    }
 }
 
 fn main() {
